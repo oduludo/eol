@@ -7,9 +7,7 @@ import (
 	"time"
 )
 
-type CommonUnderlyingType interface {
-	//DescribeObject()
-}
+type CommonUnderlyingType interface{}
 
 type CycleDetail struct {
 	CommonUnderlyingType
@@ -18,10 +16,6 @@ type CycleDetail struct {
 	LatestReleaseDate string `json:"latestReleaseDate"`
 	ReleaseDate       string `json:"releaseDate"`
 	Lts               bool   `json:"lts"`
-}
-
-func (cd CycleDetail) Describe() {
-	log.Println(cd.Eol)
 }
 
 func (cd CycleDetail) EolTime() time.Time {
