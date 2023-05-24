@@ -3,10 +3,10 @@ FROM golang:1.20
 
 WORKDIR /app
 
-COPY ./src/go.mod ./
+COPY ./src/go.mod ./src/go.sum ./
 RUN go mod download
 
-COPY ./src/*.go ./
+COPY ./src ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o /eol
 RUN mv /eol /usr/bin
 
