@@ -4,11 +4,11 @@ import (
 	"testing"
 )
 
-var client = MockCycleDetailClient[CycleDetail]{}
+var mockClient = MockCycleDetailClient[CycleDetail]{}
 
 func TestCycleDetailClient_Get(t *testing.T) {
 	// Perform a Get on the mocked client
-	cycleDetail, err := client.Get("smth_fake", "4.2")
+	cycleDetail, err := mockClient.Get("smth_fake", "4.2")
 
 	if err != nil {
 		t.Fatal(err)

@@ -6,6 +6,10 @@ registry := "eol"
 build:
     docker build . -t {{img_name}}
 
+# Build the container specifically for testing.
+build-test:
+    docker compose build
+
 # Run a command in the Docker container.
 run *cmd:
     docker run {{img_name}} {{cmd}}
@@ -17,7 +21,7 @@ docker-publish: build
     docker push {{owner}}/{{registry}}:latest
 
 # Run unit tests in the Docker container.
-test: build
+test: build-test
     docker compose run --rm test
 
 cov: test
