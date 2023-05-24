@@ -18,4 +18,7 @@ docker-publish: build
 
 # Run unit tests in the Docker container.
 test: build
-    just run go test -v ./...
+    docker compose run --rm test
+
+cov: test
+    cd src && go tool cover -html=../coverage/coverage.out

@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  test:
+    build:
+      context: .
+    volumes:
+      - "./coverage:/coverage"
+    command:
+      - go
+      - test
+      - -cover
+      - -coverprofile=/coverage/coverage.out
+      - -v
+      - ./...
