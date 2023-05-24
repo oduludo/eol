@@ -8,13 +8,14 @@ import (
 	"strconv"
 )
 
-var checkDesc = "Check the EOL status for a resource's version."
+var checkDesc = "Check the EOL status for a resource's version.\n" +
+	"Version formatting differs per resource and follows the datasource's API convention."
 
 func newCheckCmd(out io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "check RESOURCE VERSION",
 		Short: "Check the EOL status for a resource's version.",
-		Long:  checkDesc,
+		Long:  makeLongUsageDescription(checkDesc),
 		Args:  argutils.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return run(out, args[0], args[1])
