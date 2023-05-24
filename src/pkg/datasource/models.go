@@ -7,12 +7,21 @@ import (
 	"time"
 )
 
+type CommonUnderlyingType interface {
+	//DescribeObject()
+}
+
 type CycleDetail struct {
+	CommonUnderlyingType
 	Eol               string `json:"eol"`
 	Latest            string `json:"latest"`
 	LatestReleaseDate string `json:"latestReleaseDate"`
 	ReleaseDate       string `json:"releaseDate"`
 	Lts               bool   `json:"lts"`
+}
+
+func (cd CycleDetail) Describe() {
+	log.Println(cd.Eol)
 }
 
 func (cd CycleDetail) EolTime() time.Time {
@@ -44,4 +53,8 @@ func newCycleDetailFromBytes(data []byte) (CycleDetail, error) {
 	}
 
 	return cycleDetail, nil
+}
+
+func newObjectFromBytes[T CommonUnderlyingType](ref *T, data []byte) error {
+	return json.Unmarshal(data, &ref)
 }

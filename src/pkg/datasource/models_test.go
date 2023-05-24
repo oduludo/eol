@@ -2,27 +2,24 @@ package datasource
 
 import (
 	"fmt"
-	"log"
-	"os"
 	"testing"
 	"time"
 )
-
-func loadMockData(file string) []byte {
-	data, err := os.ReadFile(fmt.Sprintf("./test_assets/%s", file))
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return data
-}
 
 func TestCycleDetailFromBytes(t *testing.T) {
 	data := loadMockData("cycle_detail.json")
 	_, err := newCycleDetailFromBytes(data)
 
 	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestNewObjectFromBytes(t *testing.T) {
+	data := loadMockData("cycle_detail.json")
+	obj := CycleDetail{}
+
+	if err := newObjectFromBytes(&obj, data); err != nil {
 		t.Fatal(err)
 	}
 }

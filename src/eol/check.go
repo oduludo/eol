@@ -25,7 +25,8 @@ func newCheckCmd(out io.Writer) *cobra.Command {
 }
 
 func run(out io.Writer, resource string, version string) error {
-	cycleDetail, err := datasource.GetCycleDetail(resource, version)
+	client := datasource.CycleDetailClient[datasource.CycleDetail]{}
+	cycleDetail, err := client.Get(resource, version)
 
 	if err != nil {
 		return err
