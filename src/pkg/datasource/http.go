@@ -42,7 +42,7 @@ func (c CycleClient[T, L]) All(args ...string) ([]L, error, bool) {
 	}
 
 	if resp.StatusCode == 404 {
-		return res, errors.New("failed to find resource with specified version"), true
+		return res, errors.New("failed to find resource"), true
 	}
 
 	body, err := io.ReadAll(resp.Body)

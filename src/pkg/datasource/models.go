@@ -55,5 +55,6 @@ func newObjectFromBytes[T CommonUnderlyingType](ref *T, data []byte) error {
 
 type ListedCycleDetail struct {
 	CycleDetail
-	Cycle string `json:"cycle"`
+	Cycle        string `json:"cycle"`
+	ReleaseLabel string `json:"releaseLabel"`
 }

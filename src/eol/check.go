@@ -43,29 +43,31 @@ func run(out io.Writer, resource string, version string, exitWithCode bool) erro
 	cycleDetail, err, notFound := client.Get(resource, version)
 
 	if notFound {
-		res, err, _ := client.All(resource)
+		// Requested version not found, show available versions instead
+		result, err, _ := client.All(resource)
 
 		if err != nil {
 			return err
 		}
 
-		if err := printer.PrintVersionsList(out, res); err != nil {
+		if err := printer.PrintVersionsList(out, resource, result); err != nil {
 			return err
 		}
 	} else if err != nil {
 		return err
-	}
+	} else {
+		// Continue with the command's logic
+		hasPassedEol := cycleDetail.HasPassedEol()
+		eolResultStr := strconv.FormatBool(hasPassedEol)
 
-	hasPassedEol := cycleDetail.HasPassedEol()
-	eolResultStr := strconv.FormatBool(hasPassedEol)
+		if _, err := io.WriteString(out, eolResultStr); err != nil {
+			return err
+		}
 
-	if _, err := io.WriteString(out, eolResultStr); err != nil {
-		return err
-	}
-
-	// Explicitly exit with code 1 if user has indicated to give a non-zero status code in case EOL has been reached.
-	if exitWithCode && hasPassedEol {
-		os.Exit(eolExitCode)
+		// Explicitly exit with code 1 if user has indicated to give a non-zero status code in case EOL has been reached.
+		if exitWithCode && hasPassedEol {
+			os.Exit(eolExitCode)
+		}
 	}
 
 	return nil
