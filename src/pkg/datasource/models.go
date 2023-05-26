@@ -52,3 +52,8 @@ func newCycleDetailFromBytes(data []byte) (CycleDetail, error) {
 func newObjectFromBytes[T CommonUnderlyingType](ref *T, data []byte) error {
 	return json.Unmarshal(data, &ref)
 }
+
+type ListedCycleDetail struct {
+	CycleDetail
+	Cycle string `json:"cycle"`
+}

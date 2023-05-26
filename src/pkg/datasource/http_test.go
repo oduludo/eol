@@ -1,14 +1,15 @@
 package datasource
 
 import (
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-var mockClient = MockCycleDetailClient[CycleDetail]{}
+var mockClient = MockCycleClient[CycleDetail, ListedCycleDetail]{}
 
-func TestCycleDetailClient_Get(t *testing.T) {
-	// Perform a Get on the mocked client
-	cycleDetail, err := mockClient.Get("smth_fake", "4.2")
+func TestCycleClient_Get(t *testing.T) {
+	// Perform a Get() call on the mocked client
+	cycleDetail, err, _ := mockClient.Get("smth_fake", "4.2")
 
 	if err != nil {
 		t.Fatal(err)
@@ -22,11 +23,24 @@ func TestCycleDetailClient_Get(t *testing.T) {
 		Lts:               false,
 	}
 
-	if cycleDetail.Eol != expectedResult.Eol ||
-		cycleDetail.Latest != expectedResult.Latest ||
-		cycleDetail.LatestReleaseDate != expectedResult.LatestReleaseDate ||
-		cycleDetail.ReleaseDate != expectedResult.ReleaseDate ||
-		cycleDetail.Lts != expectedResult.Lts {
-		t.Fail()
+	assert.Equal(t, cycleDetail.Eol, expectedResult.Eol)
+	assert.Equal(t, cycleDetail.Latest, expectedResult.Latest)
+	assert.Equal(t, cycleDetail.LatestReleaseDate, expectedResult.LatestReleaseDate)
+	assert.Equal(t, cycleDetail.ReleaseDate, expectedResult.ReleaseDate)
+	assert.Equal(t, cycleDetail.Lts, expectedResult.Lts)
+}
+
+func TestCycleClient_All(t *testing.T) {
+	// Perform an All() call on the mocked client
+	cycleList, err, _ := mockClient.All("smth_fake")
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, len(cycleList), 12)
+
+	for _, cycleDetail := range cycleList {
+		assert.NotNil(t, cycleDetail.Cycle)
 	}
 }

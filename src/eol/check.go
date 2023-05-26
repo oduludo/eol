@@ -5,6 +5,7 @@ import (
 	"io"
 	"oduludo.io/eol/pkg/argutils"
 	"oduludo.io/eol/pkg/datasource"
+	"oduludo.io/eol/pkg/printer"
 	"os"
 	"strconv"
 )
@@ -38,10 +39,20 @@ func newCheckCmd(out io.Writer) *cobra.Command {
 }
 
 func run(out io.Writer, resource string, version string, exitWithCode bool) error {
-	client := datasource.CycleDetailClient[datasource.CycleDetail]{}
-	cycleDetail, err := client.Get(resource, version)
+	client := datasource.CycleClient[datasource.CycleDetail, datasource.ListedCycleDetail]{}
+	cycleDetail, err, notFound := client.Get(resource, version)
 
-	if err != nil {
+	if notFound {
+		res, err, _ := client.All(resource)
+
+		if err != nil {
+			return err
+		}
+
+		if err := printer.PrintVersionsList(out, res); err != nil {
+			return err
+		}
+	} else if err != nil {
 		return err
 	}
 

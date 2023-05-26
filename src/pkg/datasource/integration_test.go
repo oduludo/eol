@@ -1,6 +1,7 @@
 package datasource
 
 import (
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -12,11 +13,13 @@ import (
 // may break without any changes to the EOL codebase. If this integration test breaks
 // it is likely the whole application can no longer fetch its data for usage.
 
-var cycleDetailClient = CycleDetailClient[CycleDetail]{}
+var cycleDetailClient = CycleClient[CycleDetail, ListedCycleDetail]{}
 
 func TestIntegrationCycleDetailClient_Get(t *testing.T) {
 	// Perform a Get on the real client
-	cycleDetail, err := cycleDetailClient.Get("ruby", "2.7")
+	cycleDetail, err, notFound := cycleDetailClient.Get("ruby", "2.7")
+
+	assert.False(t, notFound, "resource 'ruby@2.7' was not found in datasource")
 
 	if err != nil {
 		t.Fatal(err)
