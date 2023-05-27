@@ -1,6 +1,7 @@
 package datasource
 
 import (
+	"encoding/json"
 	"errors"
 	"flag"
 	"io"
@@ -12,6 +13,27 @@ import (
 
 // CycleClient gets CycleDetail objects and implements the ClientInterface from oduludo.io/pkg/datasource.
 type CycleClient[T CycleDetail, L ListedCycleDetail] struct{}
+
+func (c CycleClient[T, L]) Resources() ([]string, error) {
+	resp, err := http.Get(constructResourcesUrl())
+
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	res := make([]string, 0)
+
+	if err := json.Unmarshal(body, &res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
 
 func (c CycleClient[T, L]) Get(args ...string) (T, error, bool) {
 	resp, err := http.Get(constructCycleDetailUrl(args[0], args[1]))
@@ -63,6 +85,18 @@ func (c CycleClient[T, L]) All(args ...string) ([]L, error, bool) {
 
 // MockCycleClient is used to mock the client/API during testing.
 type MockCycleClient[T CycleDetail, L ListedCycleDetail] struct{}
+
+func (c MockCycleClient[T, L]) Resources() ([]string, error) {
+	data := loadMockData(mockAll)
+
+	res := make([]string, 0)
+
+	if err := json.Unmarshal(data, &res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
 
 func (c MockCycleClient[T, L]) Get(args ...string) (T, error, bool) {
 	resource := args[0]

@@ -18,6 +18,10 @@ func constructCycleListUrl(resource string) string {
 	return fmt.Sprintf("%s/%s.json", apiBase, resource)
 }
 
+func constructResourcesUrl() string {
+	return fmt.Sprintf("%s/all.json", apiBase)
+}
+
 func loadMockData(file string) []byte {
 	data, err := os.ReadFile(path.Join(cfg.TestAssets, file))
 

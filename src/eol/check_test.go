@@ -38,6 +38,10 @@ func TestIntegrationCheckCmdWithoutStatusCode(t *testing.T) {
 	expected := "true"
 
 	assert.Equal(t, actual.String(), expected, "actual is not expected")
+
+	if err := os.Unsetenv(cfg.IsIntegrationTestEnvKey); err != nil {
+		t.Fatal(err)
+	}
 }
 
 func TestIntegrationCheckCmdWithStatusCode(t *testing.T) {
@@ -58,11 +62,19 @@ func TestIntegrationCheckCmdWithStatusCode(t *testing.T) {
 	expected := "true"
 
 	assert.Equal(t, actual.String(), expected, "actual is not expected")
+
+	if err := os.Unsetenv(cfg.IsIntegrationTestEnvKey); err != nil {
+		t.Fatal(err)
+	}
 }
 
 // Assert a non-existent version results in the table being printed.
 // The exact contents don't matter.
-func TestCheckCmdVersionNotFound(t *testing.T) {
+func TestIntefrationCheckCmdVersionNotFound(t *testing.T) {
+	if err := os.Setenv(cfg.IsIntegrationTestEnvKey, "true"); err != nil {
+		t.Fatal(err)
+	}
+
 	actual := new(bytes.Buffer)
 	rootCmd := NewRootCmd(actual)
 	rootCmd.SetOut(actual)
@@ -76,4 +88,8 @@ func TestCheckCmdVersionNotFound(t *testing.T) {
 	}
 
 	assert.True(t, strings.Contains(actual.String(), listVersionsTableHeader))
+
+	if err := os.Unsetenv(cfg.IsIntegrationTestEnvKey); err != nil {
+		t.Fatal(err)
+	}
 }
