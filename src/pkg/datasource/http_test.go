@@ -8,18 +8,18 @@ import (
 var mockClient = MockCycleClient[CycleDetail, ListedCycleDetail]{}
 
 func TestCycleClient_Get(t *testing.T) {
-	// Perform a Get() call on the mocked client
-	cycleDetail, err, _ := mockClient.Get("smth_fake", "4.2")
+	// Perform a successful Get() call on the mocked client
+	cycleDetail, err, _ := mockClient.Get("ruby", "3.2")
 
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	expectedResult := CycleDetail{
-		Eol:               "2048-03-15",
-		Latest:            "2023.0.20230503.0",
-		LatestReleaseDate: "2023-05-04",
-		ReleaseDate:       "2023-03-01",
+		Eol:               "2046-03-31",
+		Latest:            "3.2.2",
+		LatestReleaseDate: "2023-03-30",
+		ReleaseDate:       "2022-12-25",
 		Lts:               false,
 	}
 
@@ -32,7 +32,7 @@ func TestCycleClient_Get(t *testing.T) {
 
 func TestCycleClient_All(t *testing.T) {
 	// Perform an All() call on the mocked client
-	cycleList, err, _ := mockClient.All("smth_fake")
+	cycleList, err, _ := mockClient.All("ruby")
 
 	if err != nil {
 		t.Fatal(err)

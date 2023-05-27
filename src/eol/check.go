@@ -39,7 +39,7 @@ func newCheckCmd(out io.Writer) *cobra.Command {
 }
 
 func run(out io.Writer, resource string, version string, exitWithCode bool) error {
-	client := datasource.CycleClient[datasource.CycleDetail, datasource.ListedCycleDetail]{}
+	client := datasource.NewCycleClient()
 	cycleDetail, err, notFound := client.Get(resource, version)
 
 	if notFound {

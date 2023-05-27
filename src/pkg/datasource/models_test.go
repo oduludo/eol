@@ -7,7 +7,7 @@ import (
 )
 
 func TestCycleDetailFromBytes(t *testing.T) {
-	data := loadMockData("cycle_detail.json")
+	data := loadMockData(mockResourceBeforeEol)
 	_, err := newCycleDetailFromBytes(data)
 
 	if err != nil {
@@ -16,7 +16,7 @@ func TestCycleDetailFromBytes(t *testing.T) {
 }
 
 func TestNewObjectFromBytes(t *testing.T) {
-	data := loadMockData("cycle_detail.json")
+	data := loadMockData(mockResourceBeforeEol)
 	obj := CycleDetail{}
 
 	if err := newObjectFromBytes(&obj, data); err != nil {
@@ -25,19 +25,19 @@ func TestNewObjectFromBytes(t *testing.T) {
 }
 
 func TestCycleDetail_EolTime(t *testing.T) {
-	data := loadMockData("cycle_detail.json")
+	data := loadMockData(mockResourceBeforeEol)
 	cycleData, err := newCycleDetailFromBytes(data)
 
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	// Should be `2048-03-15 00:00:00`
+	// Should be `2046-03-31 00:00:00`
 	eolTime := cycleData.EolTime()
 
-	if eolTime.Year() != 2048 ||
+	if eolTime.Year() != 2046 ||
 		eolTime.Month() != 3 ||
-		eolTime.Day() != 15 ||
+		eolTime.Day() != 31 ||
 		eolTime.Hour() != 0 ||
 		eolTime.Minute() != 0 ||
 		eolTime.Second() != 0 {
@@ -51,7 +51,7 @@ func testCompareEolTimeWith(t *testing.T, cd *CycleDetail, yearOffset int, expec
 	// We are testing against an EOL of `2048-03-15`
 	result := hasPassedEolWithTime(
 		cd,
-		time.Date(2048+yearOffset, 3, 15, 0, 0, 0, 0, time.UTC),
+		time.Date(2046+yearOffset, 3, 31, 0, 0, 0, 0, time.UTC),
 	)
 
 	if result != expected {
@@ -66,7 +66,7 @@ type EolCompare struct {
 }
 
 func TestCompareEolTimeWith(t *testing.T) {
-	data := loadMockData("cycle_detail.json")
+	data := loadMockData(mockResourceBeforeEol)
 	cycleData, err := newCycleDetailFromBytes(data)
 
 	if err != nil {

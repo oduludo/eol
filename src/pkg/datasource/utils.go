@@ -3,7 +3,9 @@ package datasource
 import (
 	"fmt"
 	"log"
+	"oduludo.io/eol/cfg"
 	"os"
+	"path"
 )
 
 const apiBase = "https://endoflife.date/api"
@@ -17,7 +19,7 @@ func constructCycleListUrl(resource string) string {
 }
 
 func loadMockData(file string) []byte {
-	data, err := os.ReadFile(fmt.Sprintf("./test_assets/%s", file))
+	data, err := os.ReadFile(path.Join(cfg.TestAssets, file))
 
 	if err != nil {
 		log.Fatal(err)
