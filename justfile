@@ -23,8 +23,8 @@ docker-publish tag="latest":
     docker push {{owner}}/{{registry}}:{{tag}}
 
     # LINUX/ARM64
-    docker build --file=./docker/Dockerfile.arm . -t {{img_name}}
-    docker tag {{img_name}} {{owner}}/{{registry}}:{{tag}}-arm
+    docker build --file=./docker/Dockerfile.arm . -t {{img_name}}:arm
+    docker tag {{img_name}}:arm {{owner}}/{{registry}}:{{tag}}-arm
     docker push {{owner}}/{{registry}}:{{tag}}-arm
 
 # Run linter
