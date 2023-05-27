@@ -4,6 +4,8 @@ FROM golang:1.20
 WORKDIR /app
 RUN mkdir /coverage
 
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+
 COPY ./src/go.mod ./src/go.sum ./
 RUN go mod download
 

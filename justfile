@@ -20,6 +20,10 @@ docker-publish: build
     docker tag {{img_name}} {{owner}}/{{registry}}:latest
     docker push {{owner}}/{{registry}}:latest
 
+# Run linter
+lint: build-test
+    just run golangci-lint run /app/...
+
 # Run unit tests in the Docker container.
 test: build-test
     docker compose run --rm test
