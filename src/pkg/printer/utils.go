@@ -37,11 +37,15 @@ func nChar(n int, char rune) string {
 func centerString(text string, width int) string {
 	padding := width - len(text)
 
+	if padding < 0 {
+		panic("negative text padding")
+	}
+
 	if padding%2 == 0 {
 		return strings.Join([]string{nChar(padding/2, ' '), text, nChar(padding/2, ' ')}, " ")
 	} else {
-		left := int(math.Floor(float64(padding / 2)))
-		right := int(math.Floor(float64(padding/2)) + 1)
+		left := int(math.Floor(float64(padding) / 2))
+		right := int(math.Floor(float64(padding)/2) + 1)
 		return strings.Join([]string{nChar(left, ' '), text, nChar(right, ' ')}, " ")
 	}
 }

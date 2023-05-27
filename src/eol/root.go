@@ -21,6 +21,9 @@ func NewRootCmd(out io.Writer) *cobra.Command {
 		SilenceUsage: true,
 	}
 
+	// Disable the `eol completion ...` command
+	cmd.CompletionOptions.DisableDefaultCmd = true
+
 	cmd.AddCommand(
 		newCheckCmd(out),
 		newListVersionsCmd(out),

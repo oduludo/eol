@@ -1,0 +1,22 @@
+on:
+  release:
+    types:
+      - published
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: actions/checkout@v3
+      - run: 'echo "Name: ${{ github.event.release.name }} Description: ${{ github.event.release.body }}"'
+      - run: wget -qO - 'https://proget.makedeb.org/debian-feeds/prebuilt-mpr.pub' | gpg --dearmor | sudo tee /usr/share/keyrings/prebuilt-mpr-archive-keyring.gpg 1> /dev/null
+      - run: echo "deb [arch=amd64 signed-by=/usr/share/keyrings/prebuilt-mpr-archive-keyring.gpg] https://proget.makedeb.org prebuilt-mpr $(lsb_release -cs)" | sudo tee /etc/apt/sources.list.d/prebuilt-mpr.list
+      - run: sudo apt update
+      - run: sudo apt upgrade
+      - run: sudo apt install just
+      - run: docker login
+      - run: just docker-publish ${{ github.event.release.name }}
