@@ -2,8 +2,12 @@ package datasource
 
 import (
 	"errors"
+	"flag"
 	"io"
 	"net/http"
+	"oduludo.io/eol/cfg"
+	pkghttp "oduludo.io/eol/pkg/http"
+	"os"
 )
 
 // CycleClient gets CycleDetail objects and implements the ClientInterface from oduludo.io/pkg/datasource.
@@ -60,8 +64,25 @@ func (c CycleClient[T, L]) All(args ...string) ([]L, error, bool) {
 // MockCycleClient is used to mock the client/API during testing.
 type MockCycleClient[T CycleDetail, L ListedCycleDetail] struct{}
 
-func (c MockCycleClient[T, L]) Get(_ ...string) (T, error, bool) {
-	data := loadMockData("cycle_detail.json")
+func (c MockCycleClient[T, L]) Get(args ...string) (T, error, bool) {
+	resource := args[0]
+	version := args[1]
+
+	if resource != "ruby" {
+		return T{}, errors.New("unsupported resource under testing"), false
+	}
+
+	var file string
+
+	if version == "3.2" {
+		file = mockResourceBeforeEol
+	} else if version == "2.7" {
+		file = mockResourcePassedEol
+	} else {
+		return T{}, errors.New("failed to find resource"), true
+	}
+
+	data := loadMockData(file)
 
 	res := T{}
 
@@ -72,8 +93,16 @@ func (c MockCycleClient[T, L]) Get(_ ...string) (T, error, bool) {
 	return res, nil, false
 }
 
-func (c MockCycleClient[T, L]) All(_ ...string) ([]L, error, bool) {
-	data := loadMockData("cycle_list.json")
+func (c MockCycleClient[T, L]) All(args ...string) ([]L, error, bool) {
+	var file string
+
+	if args[0] == "ruby" {
+		file = mockResourceAll
+	} else {
+		return make([]L, 0), nil, true
+	}
+
+	data := loadMockData(file)
 
 	res := make([]L, 0)
 
@@ -82,4 +111,15 @@ func (c MockCycleClient[T, L]) All(_ ...string) ([]L, error, bool) {
 	}
 
 	return res, nil, false
+}
+
+func NewCycleClient() pkghttp.ClientInterface[CycleDetail, ListedCycleDetail] {
+	isIntegrationTestStr := os.Getenv(cfg.IsIntegrationTestEnvKey)
+	isIntegrationTest := isIntegrationTestStr == "true"
+
+	if flag.Lookup("test.v") != nil && !isIntegrationTest {
+		return MockCycleClient[CycleDetail, ListedCycleDetail]{}
+	}
+
+	return CycleClient[CycleDetail, ListedCycleDetail]{}
 }

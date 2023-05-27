@@ -25,7 +25,7 @@ func newListVersionsCmd(out io.Writer) *cobra.Command {
 }
 
 func runListVersions(out io.Writer, resource string) error {
-	client := datasource.CycleClient[datasource.CycleDetail, datasource.ListedCycleDetail]{}
+	client := datasource.NewCycleClient()
 	result, err, _ := client.All(resource)
 
 	if err != nil {
