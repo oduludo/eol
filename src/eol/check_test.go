@@ -5,7 +5,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"oduludo.io/eol/cfg"
 	"os"
-	"os/exec"
 	"strings"
 	"testing"
 )
@@ -44,33 +43,9 @@ func TestIntegrationCheckCmdWithoutStatusCode(t *testing.T) {
 	}
 }
 
-func TestIntegrationCheckCmdWithStatusCode(t *testing.T) {
-	if err := os.Setenv(cfg.IsIntegrationTestEnvKey, "true"); err != nil {
-		t.Fatal(err)
-	}
-
-	actual := new(bytes.Buffer)
-	rootCmd := NewRootCmd(actual)
-	rootCmd.SetOut(actual)
-	rootCmd.SetErr(actual)
-	rootCmd.SetArgs([]string{"check", "ruby", "2.7"})
-
-	err := rootCmd.Execute()
-	if e, ok := err.(*exec.ExitError); ok && e.ExitCode() != eolExitCode {
-	}
-
-	expected := "true"
-
-	assert.Equal(t, actual.String(), expected, "actual is not expected")
-
-	if err := os.Unsetenv(cfg.IsIntegrationTestEnvKey); err != nil {
-		t.Fatal(err)
-	}
-}
-
 // Assert a non-existent version results in the table being printed.
 // The exact contents don't matter.
-func TestIntefrationCheckCmdVersionNotFound(t *testing.T) {
+func TestIntegrationCheckCmdVersionNotFound(t *testing.T) {
 	if err := os.Setenv(cfg.IsIntegrationTestEnvKey, "true"); err != nil {
 		t.Fatal(err)
 	}

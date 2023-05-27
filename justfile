@@ -12,7 +12,7 @@ build-test:
 
 # Run a command in the Docker container.
 run *cmd:
-    docker run {{img_name}} {{cmd}}
+    docker run --rm {{img_name}} {{cmd}}
 
 # Publish the Docker container to Docker Hub.
 # When working on an ARM machine, make sure to build for the correct target (which can be specified in the Dockerfile).
@@ -21,7 +21,7 @@ docker-publish: build
     docker push {{owner}}/{{registry}}:latest
 
 # Run linter
-lint: build-test
+lint: build
     just run golangci-lint run /app/...
 
 # Run unit tests in the Docker container.
