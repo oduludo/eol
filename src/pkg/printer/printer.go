@@ -52,3 +52,15 @@ func PrintVersionsList(out io.Writer, resource string, cycleList []datasource.Li
 
 	return nil
 }
+
+func PrintResourcesList(out io.Writer, resources []string) error {
+	if _, err := fmt.Fprintf(out, "Found %d resources:\n", len(resources)); err != nil {
+		return err
+	}
+
+	for _, resource := range resources {
+		fmt.Fprintf(out, "- %s\n", resource)
+	}
+
+	return nil
+}
