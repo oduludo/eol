@@ -14,22 +14,9 @@ build-test:
 run *cmd:
     docker run --rm {{img_name}} {{cmd}}
 
-# Publish the Docker container to Docker Hub.
-# When working on an ARM machine, make sure to build for the correct target (which can be specified in the Dockerfile.amd).
-docker-publish tag="latest":
-    # LINUX/AMD64 - DEFAULT
-    docker build --file=./docker/Dockerfile.amd . -t {{img_name}}
-    docker tag {{img_name}} {{owner}}/{{registry}}:{{tag}}
-    docker push {{owner}}/{{registry}}:{{tag}}
-
-    # LINUX/ARM64
-    docker build --file=./docker/Dockerfile.arm . -t {{img_name}}
-    docker tag {{img_name}} {{owner}}/{{registry}}:{{tag}}-arm
-    docker push {{owner}}/{{registry}}:{{tag}}-arm
-
 # Run linter
-lint: build
-    just run golangci-lint run /app/...
+lint: build-test
+    docker compose run --rm test golangci-lint run /app/...
 
 # Run unit tests in the Docker container.
 test: build-test
@@ -37,3 +24,12 @@ test: build-test
 
 cov: test
     cd src && go tool cover -html=../coverage/coverage.out
+
+docker-builder := "eol-builder"
+
+setup-buildx:
+    docker buildx create --name {{docker-builder}} --driver docker-container --bootstrap
+
+buildx tag="latest":
+    docker buildx use {{docker-builder}}
+    docker buildx build --platform linux/amd64,linux/arm64 -t {{owner}}/{{registry}}:{{tag}} --push .
