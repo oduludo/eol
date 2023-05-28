@@ -19,5 +19,5 @@ jobs:
       - run: sudo apt update
       - run: sudo apt upgrade
       - run: sudo apt install just
-      - run: docker login
-      - run: just docker-publish ${{ github.event.release.name }}
+      - run: just setup-buildx
+      - run: just buildx ${{ github.event.release.name }}
