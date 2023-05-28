@@ -15,8 +15,8 @@ run *cmd:
     docker run --rm {{img_name}} {{cmd}}
 
 # Run linter
-lint: build
-    just run golangci-lint run /app/...
+lint: build-test
+    docker compose run --rm test golangci-lint run /app/...
 
 # Run unit tests in the Docker container.
 test: build-test
