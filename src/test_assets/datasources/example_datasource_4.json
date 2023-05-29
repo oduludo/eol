@@ -1,0 +1,24 @@
+{
+  "foo": [
+    {
+      "eol": "xxx",
+      "cycle": "v0.1.1"
+    },
+    {
+      "eol": "xxx",
+      "cycle": "v0.1.1",
+      "releaseName": "cool name"
+    }
+  ],
+  "bar": [
+    {
+      "eol": "xxx",
+      "cycle": "v0.1.1"
+    },
+    {
+      "eol": "xxx",
+      "cycle": "v0.1.1",
+      "releaseName": "cool name"
+    }
+  ]
+}

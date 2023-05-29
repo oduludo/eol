@@ -20,7 +20,4 @@ FROM base as test
 
 # Mimic having some datasource file somewhere in the file system to process
 RUN mkdir /home/files
-COPY ./docs/example_datasource.json /home/files/example_datasource_1.json
-COPY ./docs/example_datasource.json /home/files/example_datasource_2.json
-COPY ./docs/example_datasource.json /home/files/example_datasource_3.json
-COPY ./docs/example_datasource.json /home/files/example_datasource_4.json
+COPY ./src/test_assets/datasources /home/files

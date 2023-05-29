@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
+	"oduludo.io/eol/eol/utils"
 	"os"
 	"strings"
 	"testing"
@@ -21,29 +22,15 @@ func performCmdUnderTesting(args ...string) (*bytes.Buffer, *cobra.Command, erro
 }
 
 func testFileBeforeEncryption(t *testing.T, file string) {
-	data, err := os.ReadFile(file)
+	err, ok := utils.FileContainsJson(file)
 	assert.Nil(t, err)
-
-	bareText := strings.TrimSpace(string(data))
-	firstChar := fmt.Sprintf("%c", bareText[0])
-	lastChar := fmt.Sprintf("%c", bareText[len(bareText)-1])
-
-	assert.Equal(t, "{", firstChar, "unexpected first token in file")
-	assert.Equal(t, "}", lastChar, "unexpected last token in file")
+	assert.True(t, ok, "file does not contain JSON data")
 }
 
 func testFileAfterEncryption(t *testing.T, file string) {
-	encryptedData, err := os.ReadFile(file)
+	err, ok := utils.FileIsEncrypted(file)
 	assert.Nil(t, err)
-
-	encryptedText := strings.TrimSpace(string(encryptedData))
-	firstChar := fmt.Sprintf("%c", encryptedText[0])
-	lastChar := fmt.Sprintf("%c", encryptedText[len(encryptedText)-1])
-
-	// The encrypted data should not contain any new lines and should not begin or end with '{' and '}' respectively
-	assert.False(t, strings.Contains(string(encryptedData), "\n"))
-	assert.NotEqual(t, "{", firstChar, "unexpected first token in encrypted data")
-	assert.NotEqual(t, "}", lastChar, "unexpected last token in encrypted data")
+	assert.True(t, ok, "file contains JSON data")
 }
 
 // Perform `eol source encrypt FILE`
@@ -152,4 +139,27 @@ func TestEncryptCmdWithFileAndOutputAndKey(t *testing.T) {
 	// Assert the situation post-run
 	// This will implicitly check the targetFile now exists, as the function will fail if it is missing
 	testFileAfterEncryption(t, targetFile)
+}
+
+func TestXOnlyPrintKeyFlagIsHiddenInHelpMsg(t *testing.T) {
+	buffer, _, err := performCmdUnderTesting(
+		"source",
+		"encrypt",
+		"--help",
+	)
+	assert.Nil(t, err)
+
+	assert.False(t, strings.Contains(buffer.String(), "x-only-print-key"))
+}
+
+func TestXOnlyPrintKeyOnlyPrintsKey(t *testing.T) {
+	inputFile := "/home/files/example_datasource_9.json"
+	buffer, _, err := performCmdUnderTesting(
+		"source",
+		"encrypt",
+		inputFile,
+		"--x-only-print-key",
+	)
+	assert.Nil(t, err)
+	assert.Equal(t, 16, len(strings.TrimSpace(buffer.String())))
 }
