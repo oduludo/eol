@@ -18,6 +18,7 @@ func newSourceCmd(out io.Writer) *cobra.Command {
 	cmd.AddCommand(
 		newEncryptCmd(out),
 		newDecryptCmd(out),
+		newVerifyCmd(out),
 	)
 
 	//cmd.PersistentFlags().Bool("e", false, "set to true to give a non-zero exit code on EOL")

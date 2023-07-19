@@ -1,33 +1,45 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://oduludo.io/product.schema.json",
-  "title": "Resources",
-  "description": "Resources in the datasource",
+  "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "properties": {
-    "cycles": {
+  "patternProperties": {
+    "^.*": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "cycle": {
-            "type": "string",
-            "description": "Cycle name, functioning as the version for lookup"
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "eol": {
+              "type": "string"
+            },
+            "cycle": {
+              "type": "string"
+            }
           },
-          "eol": {
-            "type": "string",
-            "description": "Date for the cycle's EOL"
-          },
-          "releaseName": {
-            "type": "string",
-            "description": "Optional release name"
-          }
+          "required": [
+            "eol",
+            "cycle"
+          ]
         },
-        "required": [
-          "cycle",
-          "eol"
-        ]
-      }
+        {
+          "type": "object",
+          "properties": {
+            "eol": {
+              "type": "string"
+            },
+            "cycle": {
+              "type": "string"
+            },
+            "releaseName": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "eol",
+            "cycle",
+            "releaseName"
+          ]
+        }
+      ]
     }
   }
 }
