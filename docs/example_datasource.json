@@ -1,22 +1,22 @@
 {
   "foo": [
     {
-      "eol": "xxx",
+      "eol": "2022-03-31",
       "cycle": "v0.1.1"
     },
     {
-      "eol": "xxx",
+      "eol": "2022-03-31",
       "cycle": "v0.1.1",
       "releaseName": "cool name"
     }
   ],
   "bar": [
     {
-      "eol": "xxx",
+      "eol": "2022-03-31",
       "cycle": "v0.1.1"
     },
     {
-      "eol": "xxx",
+      "eol": "2022-03-31",
       "cycle": "v0.1.1",
       "releaseName": "cool name"
     }

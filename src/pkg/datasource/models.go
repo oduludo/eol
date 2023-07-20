@@ -22,7 +22,9 @@ func (cd CycleDetail) EolTime() time.Time {
 	eolTime, err := time.Parse(time.DateOnly, strings.Replace(cd.Eol, "/", "-", 2))
 
 	if err != nil {
-		log.Fatalln(err)
+		//log.Fatalln(err)
+		log.Println(cd.Eol)
+		panic(err)
 	}
 
 	return eolTime

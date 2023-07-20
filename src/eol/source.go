@@ -9,8 +9,8 @@ var sourceDesc = "..."
 
 func newSourceCmd(out io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "source encrypt|decrypt",
-		Short: "encrypt|decrypt",
+		Use:   "source encrypt|decrypt|verify",
+		Short: "encrypt|decrypt|verify",
 		Long:  makeLongUsageDescription(sourceDesc),
 		Args:  cobra.NoArgs,
 	}

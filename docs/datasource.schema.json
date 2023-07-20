@@ -19,25 +19,6 @@
             "eol",
             "cycle"
           ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "eol": {
-              "type": "string"
-            },
-            "cycle": {
-              "type": "string"
-            },
-            "releaseName": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "eol",
-            "cycle",
-            "releaseName"
-          ]
         }
       ]
     }

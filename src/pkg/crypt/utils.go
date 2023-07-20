@@ -1,7 +1,9 @@
 package crypt
 
 import (
+	"fmt"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -39,4 +41,25 @@ func GenerateKey() string {
 
 func ValidateKey(key string) bool {
 	return len(key) == EncryptionKeyLength
+}
+
+func StringIsEncrypted(data string) (bool, error) {
+	encryptedText := strings.TrimSpace(data)
+	firstChar := fmt.Sprintf("%c", encryptedText[0])
+	lastChar := fmt.Sprintf("%c", encryptedText[len(encryptedText)-1])
+
+	// The encrypted data should not contain any new lines and should not begin or end with '{' and '}' respectively
+	if strings.Contains(data, "\n") {
+		return false, nil
+	}
+
+	if firstChar == "{" {
+		return false, nil
+	}
+
+	if lastChar == "}" {
+		return false, nil
+	}
+
+	return true, nil
 }
