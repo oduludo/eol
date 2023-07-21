@@ -1,9 +1,10 @@
-version: "3"
+version: "3.8"
 
 services:
   test:
     build:
       context: .
+      target: test
     volumes:
       - "./coverage:/coverage"
     command:
@@ -13,3 +14,12 @@ services:
       - -coverprofile=/coverage/coverage.out
       - -v
       - ./...
+    depends_on:
+      - static
+
+  static:
+    image: nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./src/test_assets/datasources:/usr/share/nginx/html

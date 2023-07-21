@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "patternProperties": {
+    "^.*": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "eol": {
+              "type": "string"
+            },
+            "cycle": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "eol",
+            "cycle"
+          ]
+        }
+      ]
+    }
+  }
+}

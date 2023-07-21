@@ -28,6 +28,7 @@ func NewRootCmd(out io.Writer) *cobra.Command {
 		newCheckCmd(out),
 		newListVersionsCmd(out),
 		newListResourcesCmd(out),
+		newSourceCmd(out),
 	)
 
 	return cmd

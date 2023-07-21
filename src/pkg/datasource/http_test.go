@@ -2,10 +2,11 @@ package datasource
 
 import (
 	"github.com/stretchr/testify/assert"
+	"oduludo.io/eol/cfg"
 	"testing"
 )
 
-var mockClient = MockCycleClient[CycleDetail, ListedCycleDetail]{}
+var mockClient = MockCycleClient{}
 
 func TestCycleClient_Get(t *testing.T) {
 	// Perform a successful Get() call on the mocked client
@@ -43,4 +44,59 @@ func TestCycleClient_All(t *testing.T) {
 	for _, cycleDetail := range cycleList {
 		assert.NotNil(t, cycleDetail.Cycle)
 	}
+}
+
+// Assert the GetCustom method works, using a docker compose static file service
+// Test using both an empty key and the key placeholder
+func TestCycleClient_GetCustomForDecryptedData(t *testing.T) {
+	for _, key := range []string{"", cfg.DecryptionKeyPlaceholder} {
+		// Perform a successful GetCustom() call on the mocked client
+		listedCycleDetail, err, _ := mockClient.GetCustom(
+			"http://static/example_datasource_readonly.json",
+			"ruby",
+			"3.2",
+			key,
+		)
+
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		expectedResult := ListedCycleDetail{
+			CycleDetail: CycleDetail{
+				Eol: "2026-03-31",
+			},
+			Cycle: "3.2",
+		}
+
+		assert.Equal(t, listedCycleDetail.Eol, expectedResult.Eol)
+		assert.Equal(t, listedCycleDetail.Cycle, expectedResult.Cycle)
+	}
+}
+
+func TestCycleClient_GetCustomForEncryptedData(t *testing.T) {
+	const key = "rijltlTWRbYHtVaS"
+
+	// Perform a successful GetCustom() call on the mocked client
+	// The call is made on encrypted data, so the getCustom() implementation should decrypt the data using the provided key.
+	listedCycleDetail, err, _ := mockClient.GetCustom(
+		"http://static/example_datasource_readonly_encrypted.json",
+		"ruby",
+		"3.2",
+		key,
+	)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expectedResult := ListedCycleDetail{
+		CycleDetail: CycleDetail{
+			Eol: "2026-03-31",
+		},
+		Cycle: "3.2",
+	}
+
+	assert.Equal(t, listedCycleDetail.Eol, expectedResult.Eol)
+	assert.Equal(t, listedCycleDetail.Cycle, expectedResult.Cycle)
 }

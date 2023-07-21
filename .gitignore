@@ -22,3 +22,8 @@ go.work
 
 # Goland
 .idea
+
+dist
+coverage
+
+bin

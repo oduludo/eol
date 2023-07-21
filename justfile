@@ -21,6 +21,7 @@ lint: build-test
 # Run unit tests in the Docker container.
 test: build-test
     docker compose run --rm test
+    docker compose down
 
 cov: test
     cd src && go tool cover -html=../coverage/coverage.out
